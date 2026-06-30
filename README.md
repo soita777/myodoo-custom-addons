@@ -21,10 +21,30 @@ Main features:
 - Support for tags, pinned notes, archived notes, colors, and priority.
 - Odoo app icon included.
 
+### `Company_Devices`
+
+`Company Devices` tracks company equipment and its employee assignments.
+
+Main features:
+
+- Unique asset numbers and serial numbers.
+- Laptop, desktop, phone, tablet, and other device types.
+- Employee and Odoo user assignments.
+- Available, assigned, repair, and retired statuses.
+- Remote management and tracking method details.
+- Location, purchase, warranty, retirement, and notes fields.
+- Access restricted to system administrators.
+
 ## Repository Structure
 
 ```text
 custom_addons/
+├── Company_Devices/
+│   ├── models/
+│   ├── security/
+│   ├── views/
+│   ├── __init__.py
+│   └── __manifest__.py
 ├── my_arena/
 │   ├── models/
 │   ├── security/
