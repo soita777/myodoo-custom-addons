@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="my_arena_root_menu"
+        name="My Arena"
+        sequence="25"
+        web_icon="my_arena,static/description/icon.png"
+    />
+
+    <menuitem
+        id="my_arena_notes_menu"
+        name="My Notes"
+        parent="my_arena_root_menu"
+        action="my_arena_note_action"
+        sequence="10"
+    />
+</odoo>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="My Arena">
+  <defs>
+    <linearGradient id="arena-bg" x1="16" y1="12" x2="112" y2="116" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1F7A8C"/>
+      <stop offset="0.56" stop-color="#2D4F75"/>
+      <stop offset="1" stop-color="#6B4E9B"/>
+    </linearGradient>
+    <linearGradient id="page" x1="36" y1="28" x2="92" y2="104" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E8F1F4"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#arena-bg)"/>
+  <path d="M31 35c0-6.1 4.9-11 11-11h44c6.1 0 11 4.9 11 11v58c0 6.1-4.9 11-11 11H42c-6.1 0-11-4.9-11-11V35Z" fill="#0B1F2A" opacity=".2"/>
+  <path d="M35 31c0-5 4-9 9-9h42c5 0 9 4 9 9v61c0 5-4 9-9 9H44c-5 0-9-4-9-9V31Z" fill="url(#page)"/>
+  <path d="M48 22v79" stroke="#D1DEE6" stroke-width="4"/>
+  <path d="M61 47h22M61 61h22M61 75h15" stroke="#2D4F75" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="45" cy="44" r="3" fill="#6B4E9B"/>
+  <circle cx="45" cy="58" r="3" fill="#6B4E9B"/>
+  <circle cx="45" cy="72" r="3" fill="#6B4E9B"/>
+  <path d="M82 87l9 18 9-18-9-5-9 5Z" fill="#F4B942"/>
+  <path d="M82 87l9-5 9 5" fill="none" stroke="#7A4D00" stroke-width="3" stroke-linejoin="round"/>
+</svg>

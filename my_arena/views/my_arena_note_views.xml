@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="my_arena_note_view_list" model="ir.ui.view">
+        <field name="name">my.arena.note.view.list</field>
+        <field name="model">my.arena.note</field>
+        <field name="arch" type="xml">
+            <list string="My Notes" decoration-muted="is_archived">
+                <field name="is_pinned" widget="boolean_toggle"/>
+                <field name="name"/>
+                <field name="priority"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="is_archived"/>
+                <field name="write_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="my_arena_note_view_form" model="ir.ui.view">
+        <field name="name">my.arena.note.view.form</field>
+        <field name="model">my.arena.note</field>
+        <field name="arch" type="xml">
+            <form string="My Note">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="What is this note about?"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="priority"/>
+                            <field name="tag_ids" widget="many2many_tags" context="{'default_user_id': uid}"/>
+                        </group>
+                        <group>
+                            <field name="is_pinned"/>
+                            <field name="is_archived"/>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Note">
+                            <field name="body" placeholder="Write anything you want to remember..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="my_arena_note_view_kanban" model="ir.ui.view">
+        <field name="name">my.arena.note.view.kanban</field>
+        <field name="model">my.arena.note</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="priority" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="body"/>
+                <field name="tag_ids"/>
+                <field name="color"/>
+                <field name="priority"/>
+                <field name="is_pinned"/>
+                <field name="is_archived"/>
+                <templates>
+                    <t t-name="card" class="o_kanban_record_has_image_fill">
+                        <field name="color" widget="kanban_color_picker"/>
+                        <div class="d-flex justify-content-between align-items-start gap-2">
+                            <strong class="o_kanban_record_title">
+                                <field name="name"/>
+                            </strong>
+                            <field name="is_pinned" widget="boolean_toggle"/>
+                        </div>
+                        <div class="mt-2 text-muted">
+                            <field name="body"/>
+                        </div>
+                        <div class="mt-2">
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="my_arena_note_view_search" model="ir.ui.view">
+        <field name="name">my.arena.note.view.search</field>
+        <field name="model">my.arena.note</field>
+        <field name="arch" type="xml">
+            <search string="Search My Notes">
+                <field name="name"/>
+                <field name="body"/>
+                <field name="tag_ids"/>
+                <filter name="pinned" string="Pinned" domain="[('is_pinned', '=', True)]"/>
+                <filter name="active_notes" string="Active" domain="[('is_archived', '=', False)]"/>
+                <filter name="archived" string="Archived" domain="[('is_archived', '=', True)]"/>
+                <separator/>
+                <filter name="important" string="Important" domain="[('priority', 'in', ['1', '2'])]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_priority" string="Priority" context="{'group_by': 'priority'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="my_arena_note_action" model="ir.actions.act_window">
+        <field name="name">My Notes</field>
+        <field name="res_model">my.arena.note</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="my_arena_note_view_search"/>
+        <field name="context">{'default_user_id': uid, 'search_default_active_notes': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first note
+            </p>
+            <p>
+                Keep private thoughts, tasks, reminders, and ideas in your own arena.
+            </p>
+        </field>
+    </record>
+</odoo>

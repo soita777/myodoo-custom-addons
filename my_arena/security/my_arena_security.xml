@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="my_arena_note_own_records_rule" model="ir.rule">
+        <field name="name">My Arena notes: own records only</field>
+        <field name="model_id" ref="model_my_arena_note"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="my_arena_note_tag_own_records_rule" model="ir.rule">
+        <field name="name">My Arena tags: own records only</field>
+        <field name="model_id" ref="model_my_arena_note_tag"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</odoo>
