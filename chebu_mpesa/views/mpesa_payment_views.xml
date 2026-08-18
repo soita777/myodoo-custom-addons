@@ -1,0 +1,57 @@
+<odoo>
+    <record id="view_chebu_mpesa_payment_form" model="ir.ui.view">
+        <field name="name">chebu.mpesa.payment.form</field>
+        <field name="model">chebu.mpesa.payment</field>
+        <field name="arch" type="xml">
+            <form string="M-Pesa Payment">
+                <header>
+                    <button name="action_send_stk_push" type="object" string="Send STK Push" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="amount"/>
+                        <field name="currency_id"/>
+                        <field name="phone_number"/>
+                        <field name="status"/>
+                        <field name="transaction_id"/>
+                        <field name="response_code"/>
+                        <field name="response_message"/>
+                        <field name="callback_payload"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_chebu_mpesa_payment_tree" model="ir.ui.view">
+        <field name="name">chebu.mpesa.payment.tree</field>
+        <field name="model">chebu.mpesa.payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+                <field name="phone_number"/>
+                <field name="status"/>
+                <field name="transaction_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_chebu_mpesa_payment" model="ir.actions.act_window">
+        <field name="name">M-Pesa Payments</field>
+        <field name="res_model">chebu.mpesa.payment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_chebu_mpesa_root" name="M-Pesa" parent="project.menu_main_pm" sequence="10"/>
+    <menuitem id="menu_chebu_mpesa_payments" name="Payments" parent="menu_chebu_mpesa_root" action="action_chebu_mpesa_payment" sequence="10"/>
+</odoo>
