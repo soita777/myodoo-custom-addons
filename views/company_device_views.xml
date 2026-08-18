@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_device_tree" model="ir.ui.view">
+        <field name="name">company.device.tree</field>
+        <field name="model">company.device</field>
+        <field name="arch" type="xml">
+            <tree string="Devices">
+                <field name="name"/>
+                <field name="device_type"/>
+                <field name="serial_number"/>
+                <field name="asset_tag"/>
+                <field name="assigned_user"/>
+                <field name="remotely_managed"/>
+                <field name="tracking_method"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_company_device_form" model="ir.ui.view">
+        <field name="name">company.device.form</field>
+        <field name="model">company.device</field>
+        <field name="arch" type="xml">
+            <form string="Device">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="device_type"/>
+                        <field name="serial_number"/>
+                        <field name="asset_tag"/>
+                        <field name="assigned_user"/>
+                        <field name="assigned_employee"/>
+                        <field name="remotely_managed"/>
+                        <field name="remote_management_details"/>
+                        <field name="tracking_method"/>
+                        <field name="location"/>
+                    </group>
+                    <group>
+                        <field name="purchase_date"/>
+                        <field name="warranty_expiry"/>
+                        <field name="active"/>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_company_devices" model="ir.actions.act_window">
+        <field name="name">Company Devices</field>
+        <field name="res_model">company.device</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_company_resources_root" name="Company Resources"/>
+    <menuitem id="menu_company_devices" name="Devices" parent="menu_company_resources_root" action="action_company_devices"/>
+
+</odoo>

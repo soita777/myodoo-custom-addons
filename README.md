@@ -2,7 +2,6 @@
 This is for my test.
 
 
-
 Custom Addons
 
 This repository tracks custom Odoo 18 addons for the local Chebu Odoo instance.
@@ -16,6 +15,8 @@ Python cache files.
 ## Available Modules
 
 - `my_arena`: a private notebook app for Odoo users.
+- `company_devices`: a module to record and track company-owned devices.
+
 ### `my_arena`
 
 ## Local Odoo Setup
@@ -42,6 +43,13 @@ custom_addons/
 │   ├── views/
 │   ├── __init__.py
 │   └── __manifest__.py
+├── Company resources/
+│   └── company_devices/
+│       ├── models/
+│       ├── security/
+│       ├── views/
+│       ├── __init__.py
+│       └── __manifest__.py
 ├── .gitignore
 └── README.md
 ```
@@ -97,26 +105,30 @@ Then restart Odoo:
 sudo systemctl restart odoo
 ```
 
-## Git Workflow
+## Company Devices (module)
 
-Check current changes:
-```bash
-git status
-```
-Stage changes:
+Module to record and track company-owned devices and assign them to employees or users. Includes fields for remote management and tracking method.
 
-```bash
+Quick install
+-------------
+- Copy the `company_devices` folder into your Odoo `addons` path (for example, `custom_addons/Company resources/company_devices`).
+- Update the Apps list and install the `Company Devices` module.
+
+GitHub
+------
+This repository contains a single Odoo module `company_devices`. To publish to GitHub, initialize a git repo, add a remote, and push. Example commands:
+
+```powershell
+cd "c:\Users\PeterSoita\Desktop\chebu-odoo18-enterprise\custom_addons\Company resources\company_devices"
+git init
 git add .
+git commit -m "Initial commit: company_devices module"
+git remote add origin <YOUR_GITHUB_REPO_URL>
+git push -u origin main
 ```
 
-Commit changes:
+Notes
+-----
+- The module restricts model access to admin by default. If you want HR or managers to have access, ask and I will add groups and record rules.
+- If you want me to push to GitHub, provide the repository URL or let me know if you want instructions for creating the repository.
 
-```bash
-git commit -m "Describe the change"
-```
-
-## Notes
-
-- Keep custom modules in this repository.
-- Keep Odoo system configuration in `/etc/odoo/odoo.conf`, not in Git.
-- Keep database backups outside this repository.
