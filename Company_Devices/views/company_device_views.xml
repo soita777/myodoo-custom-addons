@@ -1,68 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="company_device_view_list" model="ir.ui.view">
-        <field name="name">company.device.view.list</field>
+    <record id="view_company_device_tree" model="ir.ui.view">
+        <field name="name">company.device.tree</field>
         <field name="model">company.device</field>
         <field name="arch" type="xml">
-            <list string="Company Devices" decoration-muted="not active">
-                <field name="asset_number"/>
+            <tree string="Devices">
                 <field name="name"/>
                 <field name="device_type"/>
                 <field name="serial_number"/>
-                <field name="assigned_employee"/>
-                <field name="status" widget="badge"/>
-                <field name="remotely_managed" widget="boolean_toggle"/>
-                <field name="location"/>
+                <field name="asset_tag"/>
+                <field name="assigned_user"/>
+                <field name="remotely_managed"/>
+                <field name="tracking_method"/>
                 <field name="active"/>
-            </list>
+            </tree>
         </field>
     </record>
 
-    <record id="company_device_view_form" model="ir.ui.view">
-        <field name="name">company.device.view.form</field>
+    <record id="view_company_device_form" model="ir.ui.view">
+        <field name="name">company.device.form</field>
         <field name="model">company.device</field>
         <field name="arch" type="xml">
-            <form string="Company Device">
+            <form string="Device">
                 <sheet>
-                    <div class="oe_title">
-                        <label for="name"/>
-                        <h1><field name="name" placeholder="e.g. Dell Latitude 7440"/></h1>
-                    </div>
                     <group>
-                        <group string="Identification">
-                            <field name="asset_number"/>
-                            <field name="serial_number"/>
-                            <field name="device_type"/>
-                            <field name="status"/>
-                        </group>
-                        <group string="Assignment">
-                            <field name="assigned_employee"/>
-                            <field name="assigned_user"/>
-                            <field name="location"/>
-                            <field name="active"/>
-                        </group>
+                        <field name="name"/>
+                        <field name="device_type"/>
+                        <field name="serial_number"/>
+                        <field name="asset_tag"/>
+                        <field name="assigned_user"/>
+                        <field name="assigned_employee"/>
+                        <field name="remotely_managed"/>
+                        <field name="remote_management_details"/>
+                        <field name="tracking_method"/>
+                        <field name="location"/>
+                    </group>
+                    <group>
+                        <field name="purchase_date"/>
+                        <field name="warranty_expiry"/>
+                        <field name="active"/>
                     </group>
                     <notebook>
-                        <page string="Management &amp; Tracking">
-                            <group>
-                                <group>
-                                    <field name="remotely_managed"/>
-                                    <field name="tracking_method"/>
-                                </group>
-                                <group>
-                                    <field name="remote_management_details"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Purchase &amp; Warranty">
-                            <group>
-                                <field name="purchase_date"/>
-                                <field name="warranty_expiry"/>
-                                <field name="retirement_date"/>
-                            </group>
-                        </page>
                         <page string="Notes">
-                            <field name="notes" placeholder="Add device notes..."/>
+                            <field name="notes"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -70,41 +50,13 @@
         </field>
     </record>
 
-    <record id="company_device_view_search" model="ir.ui.view">
-        <field name="name">company.device.view.search</field>
-        <field name="model">company.device</field>
-        <field name="arch" type="xml">
-            <search string="Search Company Devices">
-                <field name="asset_number"/>
-                <field name="name"/>
-                <field name="serial_number"/>
-                <field name="assigned_employee"/>
-                <field name="device_type"/>
-                <field name="status"/>
-                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
-                <filter name="assigned" string="Assigned" domain="[('status', '=', 'assigned')]"/>
-                <filter name="remotely_managed" string="Remotely Managed" domain="[('remotely_managed', '=', True)]"/>
-                <group expand="0" string="Group By">
-                    <filter name="group_by_type" string="Device Type" context="{'group_by': 'device_type'}"/>
-                    <filter name="group_by_status" string="Status" context="{'group_by': 'status'}"/>
-                    <filter name="group_by_employee" string="Assigned Employee" context="{'group_by': 'assigned_employee'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <record id="company_device_action" model="ir.actions.act_window">
+    <record id="action_company_devices" model="ir.actions.act_window">
         <field name="name">Company Devices</field>
         <field name="res_model">company.device</field>
-        <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="company_device_view_search"/>
-        <field name="context">{'search_default_active': 1}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Create your first company device</p>
-            <p>Record company equipment, assign it to employees, and track its management status.</p>
-        </field>
+        <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="company_devices_menu_root" name="Company Devices" sequence="50"/>
-    <menuitem id="company_devices_menu_inventory" name="Devices" parent="company_devices_menu_root" action="company_device_action" sequence="10"/>
+    <menuitem id="menu_company_resources_root" name="Company Resources"/>
+    <menuitem id="menu_company_devices" name="Devices" parent="menu_company_resources_root" action="action_company_devices"/>
+
 </odoo>
