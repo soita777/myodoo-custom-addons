@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_company_device_tree" model="ir.ui.view">
-        <field name="name">company.device.tree</field>
+    <record id="view_company_device_list" model="ir.ui.view">
+        <field name="name">company.device.list</field>
         <field name="model">company.device</field>
         <field name="arch" type="xml">
-            <tree string="Devices">
+            <list string="Devices">
                 <field name="name"/>
-                <field name="device_type"/>
-                <field name="serial_number"/>
                 <field name="asset_tag"/>
-                <field name="assigned_user"/>
-                <field name="remotely_managed"/>
-                <field name="tracking_method"/>
+                <field name="device_type"/>
+                <field name="assigned_employee"/>
+                <field name="assigned_by_id"/>
+                <field name="location"/>
                 <field name="active"/>
-            </tree>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_device_configuration_list" model="ir.ui.view">
+        <field name="name">company.device.configuration.list</field>
+        <field name="model">company.device</field>
+        <field name="arch" type="xml">
+            <list string="Device Configuration">
+                <field name="name"/>
+                <field name="asset_tag"/>
+                <field name="location"/>
+                <field name="assigned_employee"/>
+                <field name="assigned_by_id"/>
+            </list>
         </field>
     </record>
 
@@ -24,23 +37,43 @@
             <form string="Device">
                 <sheet>
                     <group>
-                        <field name="name"/>
-                        <field name="device_type"/>
-                        <field name="serial_number"/>
-                        <field name="asset_tag"/>
-                        <field name="assigned_user"/>
-                        <field name="assigned_employee"/>
-                        <field name="remotely_managed"/>
-                        <field name="remote_management_details"/>
-                        <field name="tracking_method"/>
-                        <field name="location"/>
-                    </group>
-                    <group>
-                        <field name="purchase_date"/>
-                        <field name="warranty_expiry"/>
-                        <field name="active"/>
+                        <group string="Device Details">
+                            <field name="name"/>
+                            <field name="device_type"/>
+                            <field name="serial_number"/>
+                            <field name="asset_tag"/>
+                            <field name="location"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Current Assignment">
+                            <field name="assigned_employee"/>
+                            <field name="assigned_user" readonly="1"/>
+                            <field name="assigned_by_id" readonly="1"/>
+                            <field name="assigned_on" readonly="1"/>
+                        </group>
                     </group>
                     <notebook>
+                        <page string="Management">
+                            <group>
+                                <field name="remotely_managed"/>
+                                <field name="remote_management_details"/>
+                                <field name="tracking_method"/>
+                                <field name="purchase_date"/>
+                                <field name="warranty_expiry"/>
+                            </group>
+                        </page>
+                        <page string="Assignment History" groups="base.group_system">
+                            <field name="assignment_ids" readonly="1">
+                                <list>
+                                    <field name="asset_tag"/>
+                                    <field name="employee_id"/>
+                                    <field name="assigned_by_id"/>
+                                    <field name="assigned_on"/>
+                                    <field name="state"/>
+                                    <field name="returned_on"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Notes">
                             <field name="notes"/>
                         </page>
@@ -50,13 +83,63 @@
         </field>
     </record>
 
-    <record id="action_company_devices" model="ir.actions.act_window">
-        <field name="name">Company Devices</field>
-        <field name="res_model">company.device</field>
-        <field name="view_mode">tree,form</field>
+    <record id="view_company_device_assignment_list" model="ir.ui.view">
+        <field name="name">company.device.assignment.list</field>
+        <field name="model">company.device.assignment</field>
+        <field name="arch" type="xml">
+            <list string="Device Assignments" create="0" edit="0" delete="0">
+                <field name="device_id"/>
+                <field name="asset_tag"/>
+                <field name="employee_id"/>
+                <field name="assigned_by_id"/>
+                <field name="assigned_on"/>
+                <field name="state"/>
+                <field name="returned_on"/>
+            </list>
+        </field>
     </record>
 
-    <menuitem id="menu_company_resources_root" name="Company Resources"/>
-    <menuitem id="menu_company_devices" name="Devices" parent="menu_company_resources_root" action="action_company_devices"/>
+    <record id="view_company_device_assignment_form" model="ir.ui.view">
+        <field name="name">company.device.assignment.form</field>
+        <field name="model">company.device.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Device Assignment" edit="0" create="0" delete="0">
+                <sheet><group>
+                    <field name="device_id"/>
+                    <field name="asset_tag" readonly="1"/>
+                    <field name="employee_id"/>
+                    <field name="assigned_by_id"/>
+                    <field name="assigned_on"/>
+                    <field name="state"/>
+                    <field name="returned_on"/>
+                </group></sheet>
+            </form>
+        </field>
+    </record>
 
+    <record id="action_my_company_devices" model="ir.actions.act_window">
+        <field name="name">My Devices</field><field name="res_model">company.device</field>
+        <field name="view_mode">list,form</field><field name="domain">[('assigned_user', '=', uid)]</field>
+    </record>
+    <record id="action_company_devices" model="ir.actions.act_window">
+        <field name="name">Devices</field><field name="res_model">company.device</field><field name="view_mode">list,form</field>
+    </record>
+    <record id="action_company_device_assignments" model="ir.actions.act_window">
+        <field name="name">Assignments</field><field name="res_model">company.device.assignment</field><field name="view_mode">list,form</field>
+    </record>
+    <record id="action_import_export_company_devices" model="ir.actions.act_window">
+        <field name="name">Import / Export Devices</field><field name="res_model">company.device</field>
+        <field name="view_mode">list,form</field><field name="context">{'import_file': True}</field>
+    </record>
+    <record id="action_company_device_configuration" model="ir.actions.act_window">
+        <field name="name">Device Configuration</field><field name="res_model">company.device</field>
+        <field name="view_mode">list,form</field><field name="view_id" ref="view_company_device_configuration_list"/>
+    </record>
+
+    <menuitem id="menu_company_resources_root" name="Company Devices" sequence="20"/>
+    <menuitem id="menu_my_company_devices" name="My Devices" parent="menu_company_resources_root" action="action_my_company_devices" sequence="10" groups="base.group_user"/>
+    <menuitem id="menu_company_devices" name="Devices" parent="menu_company_resources_root" action="action_company_devices" sequence="20" groups="base.group_system"/>
+    <menuitem id="menu_company_device_assignments" name="Assignments" parent="menu_company_resources_root" action="action_company_device_assignments" sequence="30" groups="base.group_system"/>
+    <menuitem id="menu_import_export_company_devices" name="Import Devices" parent="menu_company_resources_root" action="action_import_export_company_devices" sequence="40" groups="base.group_system"/>
+    <menuitem id="menu_company_device_configuration" name="Configuration" parent="menu_company_resources_root" action="action_company_device_configuration" sequence="50" groups="base.group_system"/>
 </odoo>
