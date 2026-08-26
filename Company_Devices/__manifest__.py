@@ -6,6 +6,7 @@
     "category": "Tools",
     "depends": ["base", "hr"],
     "data": [
+        "security/company_device_security.xml",
         "security/ir.model.access.csv",
         "views/company_device_views.xml",
     ],

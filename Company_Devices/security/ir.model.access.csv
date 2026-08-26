@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_company_device,access.company.device,model_company_device,base.group_system,1,1,1,1
+access_company_device_employee,company.device employee,model_company_device,base.group_user,1,0,0,0
+access_company_device_manager,company.device manager,model_company_device,base.group_system,1,1,1,1
+access_company_device_assignment_manager,company.device.assignment manager,model_company_device_assignment,base.group_system,1,1,1,1
