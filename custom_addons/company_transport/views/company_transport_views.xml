@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_transport_resource_search" model="ir.ui.view">
+        <field name="name">company.transport.resource.search</field>
+        <field name="model">company.transport.resource</field>
+        <field name="arch" type="xml">
+            <search string="Search Fleet">
+                <field name="name"/>
+                <field name="registration_number"/>
+                <field name="assigned_employee"/>
+                <field name="location"/>
+                <filter name="available" string="Available" domain="[('state', '=', 'available')]"/>
+                <filter name="assigned" string="Assigned" domain="[('state', '=', 'assigned')]"/>
+                <filter name="maintenance" string="Under Maintenance" domain="[('state', '=', 'maintenance')]"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <separator/>
+                <filter name="registration_expiring" string="Registration Expiring" domain="[('registration_expiry', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="insurance_expiring" string="Insurance Expiring" domain="[('insurance_expiry', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_type" string="Resource Type" context="{'group_by': 'resource_type'}"/>
+                    <filter name="group_by_driver" string="Assigned Driver" context="{'group_by': 'assigned_employee'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_company_transport_resource_kanban" model="ir.ui.view">
+        <field name="name">company.transport.resource.kanban</field>
+        <field name="model">company.transport.resource</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column" default_group_by="state" sample="1">
+                <field name="name"/>
+                <field name="resource_type"/>
+                <field name="registration_number"/>
+                <field name="make"/>
+                <field name="model"/>
+                <field name="state"/>
+                <field name="assigned_employee"/>
+                <field name="location"/>
+                <field name="odometer"/>
+                <templates>
+                    <t t-name="card">
+                        <article class="o_kanban_record oe_kanban_global_click">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <strong class="fs-5"><field name="name"/></strong>
+                                    <div class="text-muted"><field name="make"/> <field name="model"/></div>
+                                </div>
+                                <span t-attf-class="badge rounded-pill #{record.state.raw_value === 'available' ? 'text-bg-success' : record.state.raw_value === 'maintenance' ? 'text-bg-warning' : record.state.raw_value === 'retired' ? 'text-bg-danger' : 'text-bg-primary'}">
+                                    <field name="state"/>
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-between border-top pt-2 mt-2">
+                                <span><i class="fa fa-id-card-o me-1"/><field name="registration_number"/></span>
+                                <span><i class="fa fa-road me-1"/><field name="odometer"/> km</span>
+                            </div>
+                            <div class="text-muted mt-2" t-if="record.assigned_employee.raw_value">
+                                <i class="fa fa-user me-1"/><field name="assigned_employee"/>
+                            </div>
+                            <div class="text-muted mt-1" t-if="record.location.raw_value">
+                                <i class="fa fa-map-marker me-1"/><field name="location"/>
+                            </div>
+                        </article>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_company_transport_resource_list" model="ir.ui.view">
+        <field name="name">company.transport.resource.list</field>
+        <field name="model">company.transport.resource</field>
+        <field name="arch" type="xml">
+            <list string="Transport Resources">
+                <field name="name"/>
+                <field name="resource_type"/>
+                <field name="registration_number"/>
+                <field name="make"/>
+                <field name="model"/>
+                <field name="state"/>
+                <field name="assigned_employee"/>
+                <field name="registration_expiry"/>
+                <field name="insurance_expiry"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_company_transport_resource_form" model="ir.ui.view">
+        <field name="name">company.transport.resource.form</field>
+        <field name="model">company.transport.resource</field>
+        <field name="arch" type="xml">
+            <form string="Transport Resource">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" text="Retired" bg_color="text-bg-danger" invisible="state != 'retired'"/>
+                    <group>
+                        <group string="Resource Details">
+                            <field name="name"/>
+                            <field name="resource_type"/>
+                            <field name="make"/>
+                            <field name="model"/>
+                            <field name="year"/>
+                            <field name="color"/>
+                            <field name="registration_number"/>
+                            <field name="vin"/>
+                        </group>
+                        <group string="Operations">
+                            <field name="state"/>
+                            <field name="assigned_employee"/>
+                            <field name="assigned_user" readonly="1"/>
+                            <field name="location"/>
+                            <field name="ownership"/>
+                            <field name="fuel_type"/>
+                            <field name="odometer"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Compliance and Service">
+                            <group>
+                                <group string="Compliance">
+                                    <field name="registration_expiry"/>
+                                    <field name="insurance_expiry"/>
+                                    <field name="inspection_expiry"/>
+                                </group>
+                                <group string="Service">
+                                    <field name="purchase_date"/>
+                                    <field name="last_service_date"/>
+                                    <field name="next_service_date"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_company_transport_resource_configuration_list" model="ir.ui.view">
+        <field name="name">company.transport.resource.configuration.list</field>
+        <field name="model">company.transport.resource</field>
+        <field name="arch" type="xml">
+            <list string="Transport Configuration">
+                <field name="name"/>
+                <field name="resource_type"/>
+                <field name="ownership"/>
+                <field name="state"/>
+                <field name="location"/>
+                <field name="next_service_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_company_transport_resources" model="ir.actions.act_window">
+        <field name="name">Transport Resources</field>
+        <field name="res_model">company.transport.resource</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_company_transport_resource_search"/>
+    </record>
+    <record id="action_company_transport_configuration" model="ir.actions.act_window">
+        <field name="name">Configuration</field>
+        <field name="res_model">company.transport.resource</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_company_transport_resource_configuration_list"/>
+    </record>
+
+    <menuitem id="menu_company_transport_root" name="Fleet" sequence="25"/>
+    <menuitem id="menu_company_transport_resources" name="Vehicles and Resources" parent="menu_company_transport_root" action="action_company_transport_resources" sequence="10" groups="base.group_user"/>
+    <menuitem id="menu_company_transport_configuration" name="Configuration" parent="menu_company_transport_root" action="action_company_transport_configuration" sequence="20" groups="base.group_system"/>
+</odoo>

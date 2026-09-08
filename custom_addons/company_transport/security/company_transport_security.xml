@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="company_transport_resource_user_rule" model="ir.rule">
+        <field name="name">Company transport resources: user access</field>
+        <field name="model_id" ref="model_company_transport_resource"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="company_transport_resource_manager_rule" model="ir.rule">
+        <field name="name">Company transport resources: manager access</field>
+        <field name="model_id" ref="model_company_transport_resource"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+</odoo>
