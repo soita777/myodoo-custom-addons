@@ -1,0 +1,50 @@
+// Designed for the printable area of a standard 80 mm thermal paper roll.
+// Keep this stylesheet limited to POS receipt nodes so the POS interface is
+// unaffected outside of the receipt preview and printing flow.
+.pos-receipt-container {
+    .pos-receipt {
+        box-sizing: border-box;
+        width: 80mm;
+        max-width: 80mm;
+        min-height: auto;
+        margin: 0;
+        padding: 3mm;
+        color: #000;
+        background: #fff;
+        font-family: "DejaVu Sans Mono", "Courier New", monospace;
+        font-size: 11px;
+        line-height: 1.25;
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+}
+
+@media print {
+    @page {
+        margin: 0;
+        size: 80mm auto;
+    }
+
+    html,
+    body {
+        width: 80mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .pos-receipt-container,
+    .pos-receipt-container .pos-receipt {
+        width: 80mm !important;
+        max-width: 80mm !important;
+        margin: 0 !important;
+    }
+
+    .pos-receipt-container .pos-receipt {
+        padding: 3mm !important;
+        font-size: 11px !important;
+        line-height: 1.25 !important;
+    }
+}

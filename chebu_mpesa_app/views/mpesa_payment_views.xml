@@ -5,11 +5,16 @@
         <field name="arch" type="xml">
             <list string="M-Pesa Payments">
                 <field name="name"/>
+                <field name="customer_reference"/>
                 <field name="partner_id"/>
+                <field name="mode_of_payment"/>
                 <field name="amount"/>
+                <field name="currency_id" optional="hide"/>
                 <field name="phone_number"/>
                 <field name="status"/>
                 <field name="transaction_id"/>
+                <field name="company_id" optional="hide"/>
+                <field name="create_date" optional="hide"/>
             </list>
         </field>
     </record>
@@ -21,13 +26,22 @@
             <form string="M-Pesa Payment">
                 <sheet>
                     <group>
-                        <field name="name"/>
-                        <field name="partner_id"/>
-                        <field name="amount"/>
-                        <field name="currency_id"/>
-                        <field name="phone_number"/>
-                        <field name="status"/>
-                        <field name="transaction_id"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="customer_reference"/>
+                            <field name="partner_id"/>
+                            <field name="mode_of_payment"/>
+                            <field name="amount"/>
+                            <field name="currency_id"/>
+                        </group>
+                        <group>
+                            <field name="phone_number"/>
+                            <field name="status"/>
+                            <field name="transaction_id"/>
+                            <field name="company_id"/>
+                        </group>
+                    </group>
+                    <group>
                         <field name="response_message"/>
                     </group>
                 </sheet>
@@ -39,10 +53,41 @@
         </field>
     </record>
 
+    <record id="view_chebu_mpesa_payment_search" model="ir.ui.view">
+        <field name="name">chebu.mpesa.payment.search</field>
+        <field name="model">chebu.mpesa.payment</field>
+        <field name="arch" type="xml">
+            <search string="Search M-Pesa Payments">
+                <field name="name" string="Payment Reference"/>
+                <field name="customer_reference" string="Customer Reference"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="mode_of_payment" string="Mode of Payment"/>
+                <field name="phone_number" string="Phone Number"/>
+                <field name="transaction_id" string="Transaction ID"/>
+                <field name="company_id" string="Company"/>
+                <filter name="filter_pending" string="Pending" domain="[('status', '=', 'pending')]"/>
+                <filter name="filter_success" string="Successful" domain="[('status', '=', 'success')]"/>
+                <filter name="filter_failed" string="Failed" domain="[('status', '=', 'failed')]"/>
+                <filter name="filter_mpesa" string="M-Pesa" domain="[('mode_of_payment', '=', 'mpesa')]"/>
+                <filter name="filter_cash" string="Cash" domain="[('mode_of_payment', '=', 'cash')]"/>
+                <filter name="filter_bank_transfer" string="Bank Transfer" domain="[('mode_of_payment', '=', 'bank_transfer')]"/>
+                <filter name="filter_card" string="Card" domain="[('mode_of_payment', '=', 'card')]"/>
+                <separator/>
+                <filter name="group_by_mode" string="Mode of Payment" context="{'group_by': 'mode_of_payment'}"/>
+                <filter name="group_by_customer" string="Customer" context="{'group_by': 'partner_id'}"/>
+                <filter name="group_by_customer_reference" string="Customer Reference" context="{'group_by': 'customer_reference'}"/>
+                <filter name="group_by_status" string="Status" context="{'group_by': 'status'}"/>
+                <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}"/>
+                <filter name="group_by_date" string="Payment Date" context="{'group_by': 'create_date:day'}"/>
+            </search>
+        </field>
+    </record>
+
     <record id="action_chebu_mpesa_payment" model="ir.actions.act_window">
         <field name="name">M-Pesa Payments</field>
         <field name="res_model">chebu.mpesa.payment</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_chebu_mpesa_payment_search"/>
     </record>
 
     <menuitem id="menu_chebu_mpesa_root" name="M-Pesa" sequence="10"/>

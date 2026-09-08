@@ -23,7 +23,9 @@ class CompanyDevice(models.Model):
     )
     assigned_user = fields.Many2one("res.users", string="Assigned User")
     assigned_employee = fields.Many2one("hr.employee", string="Assigned Employee")
-    assigned_by_id = fields.Many2one("res.users", string="Assigned By", readonly=True, copy=False)
+    assigned_by_id = fields.Many2one(
+        "res.users", string="Assigned By", readonly=True, copy=False
+    )
     assigned_on = fields.Date(string="Assigned On", readonly=True, copy=False)
     assignment_ids = fields.One2many(
         "company.device.assignment", "device_id", string="Assignment History"
@@ -58,7 +60,7 @@ class CompanyDevice(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         devices = super().create(vals_list)
-        for device in devices:
+        for device, vals in zip(devices, vals_list):
             if device.assigned_employee:
                 device._assign_to_employee(device.assigned_employee)
         return devices
@@ -77,9 +79,8 @@ class CompanyDevice(models.Model):
 
     def _close_current_assignment(self):
         self.ensure_one()
-        self.assignment_ids.filtered(lambda assignment: assignment.state == "assigned").write({
-            "state": "returned", "returned_on": fields.Date.today(),
-        })
+        current = self.assignment_ids.filtered(lambda assignment: assignment.state == "assigned")
+        current.write({"state": "returned", "returned_on": fields.Date.today()})
 
     def _assign_to_employee(self, employee):
         self.ensure_one()
@@ -107,7 +108,7 @@ class CompanyDeviceAssignment(models.Model):
     employee_id = fields.Many2one("hr.employee", string="Employee", required=True)
     assigned_by_id = fields.Many2one("res.users", string="Assigned By", required=True, default=lambda self: self.env.user)
     assigned_on = fields.Date(string="Assigned On", required=True, default=fields.Date.today)
-    state = fields.Selection([("assigned", "Assigned"), ("returned", "Returned")], default="assigned", required=True)
+    state = fields.Selection([( "assigned", "Assigned"), ("returned", "Returned")], default="assigned", required=True)
     returned_on = fields.Date(string="Returned On")
 
     @api.constrains("device_id", "state")
