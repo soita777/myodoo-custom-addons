@@ -24,6 +24,11 @@ yarn-error.log*
 # Cache
 .cache/
 .parcel-cache/
+__pycache__/
+*.py[cod]
+
+# Local Odoo addon workspace is maintained separately from the repository root.
+/custom_addons/
 
 # Coverage
 coverage/
