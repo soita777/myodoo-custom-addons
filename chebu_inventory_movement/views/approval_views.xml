@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_approval_policy_list" model="ir.ui.view">
+        <field name="name">chebu.inventory.approval.policy.list</field>
+        <field name="model">chebu.inventory.approval.policy</field>
+        <field name="arch" type="xml"><list><field name="sequence"/><field name="name"/><field name="operation_type"/><field name="company_id"/><field name="blocking"/><field name="active"/></list></field>
+    </record>
+    <record id="view_approval_policy_form" model="ir.ui.view">
+        <field name="name">chebu.inventory.approval.policy.form</field>
+        <field name="model">chebu.inventory.approval.policy</field>
+        <field name="arch" type="xml"><form><sheet><group><field name="name"/><field name="sequence"/><field name="active"/><field name="company_id"/><field name="operation_type"/><field name="approver_group_id"/><field name="required_approvals"/><field name="blocking"/></group><group string="Thresholds"><field name="min_quantity"/><field name="min_value"/><field name="currency_id"/></group></sheet></form></field>
+    </record>
+    <record id="view_inventory_approval_list" model="ir.ui.view">
+        <field name="name">chebu.inventory.approval.list</field>
+        <field name="model">chebu.inventory.approval</field>
+        <field name="arch" type="xml"><list><field name="name"/><field name="requested_at"/><field name="requester_id"/><field name="operation_type"/><field name="quantity_total"/><field name="value_total"/><field name="state"/></list></field>
+    </record>
+    <record id="view_inventory_approval_form" model="ir.ui.view">
+        <field name="name">chebu.inventory.approval.form</field>
+        <field name="model">chebu.inventory.approval</field>
+        <field name="arch" type="xml"><form><header><button name="action_submit" type="object" string="Submit" class="btn-primary" invisible="state != 'draft'"/><button name="action_approve" type="object" string="Approve" class="btn-primary" invisible="state != 'submitted'"/><button name="action_reject" type="object" string="Reject" invisible="state != 'submitted'"/><button name="action_cancel" type="object" string="Cancel" invisible="state in ('approved', 'rejected', 'cancelled')"/><field name="state" widget="statusbar"/></header><sheet><group><field name="name"/><field name="policy_id"/><field name="operation_type"/><field name="company_id"/><field name="requester_id"/><field name="requested_at"/></group><group><field name="quantity_total"/><field name="value_total"/><field name="currency_id"/><field name="reason"/><field name="rejection_reason"/></group><notebook><page string="Ledger Facts"><field name="ledger_ids"/></page><page string="Decisions"><field name="decision_ids"/></page></notebook></sheet><chatter/></form></field>
+    </record>
+    <record id="action_approval_policy" model="ir.actions.act_window"><field name="name">Approval Policies</field><field name="res_model">chebu.inventory.approval.policy</field><field name="view_mode">list,form</field></record>
+    <record id="action_inventory_approval" model="ir.actions.act_window"><field name="name">Approvals</field><field name="res_model">chebu.inventory.approval</field><field name="view_mode">list,form</field></record>
+</odoo>

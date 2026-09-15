@@ -1,0 +1,32 @@
+<odoo>
+    <record id="group_inventory_movement_user" model="res.groups">
+        <field name="name">Movement User</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+    </record>
+    <record id="group_inventory_movement_operator" model="res.groups">
+        <field name="name">Movement Operator</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="implied_ids" eval="[(4, ref('group_inventory_movement_user'))]"/>
+    </record>
+    <record id="group_inventory_movement_approver" model="res.groups">
+        <field name="name">Movement Approver</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="implied_ids" eval="[(4, ref('group_inventory_movement_operator'))]"/>
+    </record>
+    <record id="group_inventory_movement_dispatcher" model="res.groups">
+        <field name="name">Delivery Dispatcher</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="implied_ids" eval="[(4, ref('group_inventory_movement_operator'))]"/>
+    </record>
+    <record id="group_inventory_movement_manager" model="res.groups">
+        <field name="name">Movement Manager</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="implied_ids" eval="[(4, ref('group_inventory_movement_approver')), (4, ref('group_inventory_movement_dispatcher'))]"/>
+    </record>
+    <record id="group_inventory_movement_admin" model="res.groups">
+        <field name="name">Movement Administrator</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="implied_ids" eval="[(4, ref('group_inventory_movement_manager'))]"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

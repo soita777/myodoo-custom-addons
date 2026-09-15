@@ -1,0 +1,31 @@
+<odoo>
+    <record id="seq_inventory_approval" model="ir.sequence">
+        <field name="name">Inventory Approval</field>
+        <field name="code">chebu.inventory.approval</field>
+        <field name="prefix">APP/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="seq_delivery_plan" model="ir.sequence">
+        <field name="name">Delivery Plan</field>
+        <field name="code">chebu.delivery.plan</field>
+        <field name="prefix">DEL/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="seq_movement_ledger" model="ir.sequence">
+        <field name="name">Movement Ledger</field>
+        <field name="code">chebu.inventory.movement.ledger</field>
+        <field name="prefix">MOV/</field>
+        <field name="padding">8</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="cron_capture_completed_moves" model="ir.cron">
+        <field name="name">Capture Completed Stock Movements</field>
+        <field name="model_id" ref="model_chebu_inventory_movement_ledger"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_capture_completed_moves()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+    </record>
+</odoo>

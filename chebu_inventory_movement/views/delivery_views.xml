@@ -1,0 +1,59 @@
+<odoo>
+    <record id="view_delivery_plan_kanban" model="ir.ui.view">
+        <field name="name">chebu.delivery.plan.kanban</field>
+        <field name="model">chebu.delivery.plan</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="scheduled_date"/>
+                <field name="vehicle_id"/>
+                <field name="driver_employee_id"/>
+                <field name="state"/>
+                <field name="route_name"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong><field name="name"/></strong>
+                                <field name="state" widget="label_selection"/>
+                            </div>
+                            <div class="mt8"><field name="partner_id"/></div>
+                            <div class="text-muted"><field name="scheduled_date"/></div>
+                            <div class="mt8" t-if="record.route_name.raw_value"><i class="fa fa-road me-1"/><field name="route_name"/></div>
+                            <div class="text-muted" t-if="record.driver_employee_id.raw_value"><i class="fa fa-user me-1"/><field name="driver_employee_id"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_delivery_plan_search" model="ir.ui.view">
+        <field name="name">chebu.delivery.plan.search</field>
+        <field name="model">chebu.delivery.plan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="vehicle_id"/>
+                <field name="driver_employee_id"/>
+                <field name="route_name"/>
+                <filter name="active_session" string="Active Session" domain="[('state', 'in', ['assigned', 'in_transit'])]"/>
+                <filter name="today" string="Today" domain="[('scheduled_date', '&gt;=', context_today())]"/>
+                <group expand="0" string="Group By"><filter name="group_state" string="Status" context="{'group_by': 'state'}"/><filter name="group_branch" string="Branch" context="{'group_by': 'branch_id'}"/></group>
+            </search>
+        </field>
+    </record>
+    <record id="view_delivery_plan_list" model="ir.ui.view">
+        <field name="name">chebu.delivery.plan.list</field>
+        <field name="model">chebu.delivery.plan</field>
+        <field name="arch" type="xml"><list><field name="name"/><field name="scheduled_date"/><field name="partner_id"/><field name="branch_id"/><field name="vehicle_id"/><field name="driver_employee_id"/><field name="state"/><field name="pod_count"/></list></field>
+    </record>
+    <record id="view_delivery_plan_form" model="ir.ui.view">
+        <field name="name">chebu.delivery.plan.form</field>
+        <field name="model">chebu.delivery.plan</field>
+        <field name="arch" type="xml"><form><header><button name="action_plan" type="object" string="Plan" class="btn-primary" invisible="state != 'draft'"/><button name="action_assign" type="object" string="Assign" class="btn-primary" invisible="state != 'planned'"/><button name="action_dispatch" type="object" string="Dispatch" class="btn-primary" invisible="state != 'assigned'"/><button name="action_deliver" type="object" string="Complete" class="btn-primary" invisible="state != 'in_transit'"/><button name="action_cancel" type="object" string="Cancel" invisible="state in ('delivered', 'cancelled')"/><field name="state" widget="statusbar" statusbar_visible="draft,planned,assigned,in_transit,delivered"/></header><sheet><group><group><field name="name"/><field name="partner_id"/><field name="scheduled_date"/><field name="branch_id"/><field name="warehouse_id"/></group><group><field name="vehicle_id"/><field name="driver_employee_id"/><field name="delivery_person_ids" widget="many2many_tags"/><field name="route_name"/><field name="pod_count"/></group></group><notebook><page string="Address"><field name="address_snapshot"/><field name="notes"/></page><page string="Stops"><field name="stop_ids"><list editable="bottom"><field name="sequence"/><field name="partner_id"/><field name="planned_datetime"/><field name="state"/></list></field></page><page string="Proof of Delivery"><field name="proof_ids"><list><field name="received_by"/><field name="received_at"/><field name="result"/><field name="stop_id"/></list></field></page><page string="Source"><field name="sale_order_id"/><field name="pos_order_id"/><field name="picking_ids" widget="many2many_tags"/></page></notebook></sheet><chatter/></form></field>
+    </record>
+    <record id="view_delivery_proof_form" model="ir.ui.view"><field name="name">chebu.delivery.proof.form</field><field name="model">chebu.delivery.proof</field><field name="arch" type="xml"><form><sheet><group><field name="delivery_id"/><field name="stop_id"/><field name="received_by"/><field name="received_at"/><field name="result"/><field name="customer_comment"/><field name="signature_attachment_id"/><field name="photo_attachment_ids" widget="many2many_tags"/><field name="latitude"/><field name="longitude"/></group></sheet></form></field></record>
+    <record id="action_delivery_plan" model="ir.actions.act_window"><field name="name">Delivery Plans</field><field name="res_model">chebu.delivery.plan</field><field name="view_mode">kanban,list,form</field><field name="search_view_id" ref="view_delivery_plan_search"/></record>
+</odoo>

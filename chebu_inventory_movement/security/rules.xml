@@ -1,0 +1,17 @@
+<odoo>
+    <record id="rule_branch_company" model="ir.rule">
+        <field name="name">Branches limited to current companies</field>
+        <field name="model_id" ref="model_chebu_inventory_branch"/>
+        <field name="domain_force">[("company_id", "in", company_ids)]</field>
+    </record>
+    <record id="rule_ledger_company" model="ir.rule">
+        <field name="name">Ledger limited to current companies</field>
+        <field name="model_id" ref="model_chebu_inventory_movement_ledger"/>
+        <field name="domain_force">[("company_id", "in", company_ids)]</field>
+    </record>
+    <record id="rule_delivery_company" model="ir.rule">
+        <field name="name">Deliveries limited to current companies</field>
+        <field name="model_id" ref="model_chebu_delivery_plan"/>
+        <field name="domain_force">[("company_id", "in", company_ids)]</field>
+    </record>
+</odoo>
