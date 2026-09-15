@@ -35,6 +35,7 @@ of standard Odoo inventory transactions.
         "views/approval_views.xml",
         "views/delivery_views.xml",
         "views/dashboard_views.xml",
+        "views/transfer_launcher_views.xml",
         "views/menus.xml",
     ],
     "installable": True,

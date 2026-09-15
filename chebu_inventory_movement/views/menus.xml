@@ -1,6 +1,9 @@
 <odoo>
-    <menuitem id="menu_inventory_movement_root" name="Inventory Movement" action="action_inventory_movement_dashboard" sequence="25" groups="group_inventory_movement_user"/>
+    <menuitem id="menu_inventory_movement_root" name="Chebu Inventory Ops" action="action_quick_internal_transfer" sequence="25" groups="group_inventory_movement_user"/>
+    <menuitem id="menu_inventory_movement_quick_transfers" name="Quick Transfers" parent="menu_inventory_movement_root" action="action_quick_internal_transfer" sequence="5" groups="group_inventory_movement_user"/>
+    <menuitem id="menu_inventory_movement_internal_transfers" name="Internal Transfers" parent="menu_inventory_movement_root" action="action_internal_transfers" sequence="6" groups="group_inventory_movement_user"/>
     <menuitem id="menu_inventory_movement_operations" name="Operations" parent="menu_inventory_movement_root" sequence="10" groups="group_inventory_movement_user"/>
+    <menuitem id="menu_inventory_movement_dashboard" name="Operations Dashboard" parent="menu_inventory_movement_operations" action="action_inventory_movement_dashboard" sequence="5" groups="group_inventory_movement_user"/>
     <menuitem id="menu_inventory_movement_ledger" name="Movement Ledger" parent="menu_inventory_movement_operations" action="action_movement_ledger" sequence="10" groups="group_inventory_movement_user"/>
     <menuitem id="menu_inventory_movement_deliveries" name="Delivery Plans" parent="menu_inventory_movement_operations" action="action_delivery_plan" sequence="20" groups="group_inventory_movement_user"/>
     <menuitem id="menu_inventory_movement_approvals" name="Approvals" parent="menu_inventory_movement_operations" action="action_inventory_approval" sequence="30" groups="group_inventory_movement_operator"/>

@@ -1,0 +1,41 @@
+<odoo>
+    <record id="view_transfer_launcher_form" model="ir.ui.view">
+        <field name="name">chebu.inventory.transfer.launcher.form</field>
+        <field name="model">chebu.inventory.transfer.launcher</field>
+        <field name="arch" type="xml">
+            <form string="Quick Transfers" create="0" edit="1" delete="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Start an Internal Transfer</h1>
+                        <div class="text-muted">Choose where stock is leaving from, then select its destination</div>
+                    </div>
+                    <div class="mt16 mb16">
+                        <label for="source_warehouse_id" string="Stock leaving from" class="fw-bold"/>
+                        <field name="source_warehouse_id" class="mt8" nolabel="1" options="{'no_create': True}"/>
+                        <field name="source_location_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                    </div>
+                    <field name="destination_line_ids" nolabel="1">
+                        <kanban class="o_kanban_small_column" create="0" delete="0">
+                            <field name="destination_location_id"/><field name="route_label"/>
+                            <templates><t t-name="card"><div class="o_transfer_destination_card oe_kanban_global_click">
+                                <div class="text-muted small">Transfer destination</div>
+                                <div class="fw-bold mt8"><field name="destination_location_id"/></div>
+                                <div class="text-muted mt8"><field name="route_label"/></div>
+                                <button name="action_start_transfer" type="object" string="Start transfer" class="btn btn-primary mt16" icon="fa-arrow-right"/>
+                            </div></t></templates>
+                        </kanban>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_quick_internal_transfer" model="ir.actions.act_window">
+        <field name="name">Quick Transfers</field><field name="res_model">chebu.inventory.transfer.launcher</field>
+        <field name="view_mode">form</field><field name="view_id" ref="view_transfer_launcher_form"/><field name="target">current</field>
+    </record>
+    <record id="action_internal_transfers" model="ir.actions.act_window">
+        <field name="name">Internal Transfers</field><field name="res_model">stock.picking</field><field name="view_mode">list,form</field>
+        <field name="domain">[('picking_type_id.code', '=', 'internal')]</field>
+    </record>
+</odoo>
