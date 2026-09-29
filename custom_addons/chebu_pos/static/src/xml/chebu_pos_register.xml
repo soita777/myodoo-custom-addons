@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="chebu_pos.LoginScreen" t-inherit="point_of_sale.LoginScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('login-body')]" position="attributes">
+            <attribute name="class" add="chebu-login-body" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('login-body')]" position="inside">
+            <div class="chebu-register-panel">
+                <div class="chebu-register-panel-header">
+                    <span class="chebu-register-title">CHEBU POS</span>
+                    <span class="chebu-register-subtitle">Select an available register</span>
+                </div>
+                <div class="chebu-register-grid">
+                    <button t-foreach="chebuRegisters" t-as="register"
+                            t-att-class="'chebu-register-card ' + ((register.id === selectedRegisterId) ? 'selected' : '') + ((register.status !== 'available') ? ' occupied' : '')"
+                            t-att-disabled="register.status !== 'available' or loadingRegisters"
+                            t-on-click="() => this.selectRegister(register)">
+                        <span class="chebu-register-name" t-esc="register.name"/>
+                        <span class="chebu-register-code" t-esc="register.code"/>
+                        <span class="chebu-register-type" t-esc="register.register_type_label"/>
+                        <span class="chebu-register-status" t-esc="register.status_label"/>
+                        <span class="chebu-register-user" t-esc="register.user_name or 'Available'"/>
+                    </button>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

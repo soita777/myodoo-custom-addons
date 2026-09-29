@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_chebu_pos_register_tree" model="ir.ui.view">
+        <field name="name">chebu.pos.register.tree</field>
+        <field name="model">chebu.pos.register</field>
+        <field name="arch" type="xml">
+            <list string="Chebu POS Registers" decoration-muted="status == 'locked'" decoration-success="status == 'active'">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="register_type"/>
+                <field name="status"/>
+                <field name="user_id"/>
+                <field name="session_id"/>
+                <field name="pos_config_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_chebu_pos_register_form" model="ir.ui.view">
+        <field name="name">chebu.pos.register.form</field>
+        <field name="model">chebu.pos.register</field>
+        <field name="arch" type="xml">
+            <form string="Chebu POS Register">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="register_type"/>
+                            <field name="status"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="session_id"/>
+                            <field name="pos_config_id"/>
+                            <field name="company_id"/>
+                            <field name="last_login"/>
+                            <field name="last_logout"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_chebu_pos_register" model="ir.actions.act_window">
+        <field name="name">Chebu POS Registers</field>
+        <field name="res_model">chebu.pos.register</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_chebu_pos_root" name="Chebu POS" parent="point_of_sale.menu_point_root" sequence="50"/>
+    <menuitem id="menu_chebu_pos_register" name="Registers" parent="menu_chebu_pos_root" action="action_chebu_pos_register" sequence="10"/>
+</odoo>

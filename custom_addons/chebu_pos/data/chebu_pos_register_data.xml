@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="register_cashier_01" model="chebu.pos.register">
+        <field name="name">Cashier 01</field>
+        <field name="code">CASH-01</field>
+        <field name="register_type">cashier</field>
+        <field name="status">available</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="register_cashier_02" model="chebu.pos.register">
+        <field name="name">Cashier 02</field>
+        <field name="code">CASH-02</field>
+        <field name="register_type">cashier</field>
+        <field name="status">available</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="register_sales_01" model="chebu.pos.register">
+        <field name="name">Sales 01</field>
+        <field name="code">SALE-01</field>
+        <field name="register_type">sales</field>
+        <field name="status">available</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="register_sales_02" model="chebu.pos.register">
+        <field name="name">Sales 02</field>
+        <field name="code">SALE-02</field>
+        <field name="register_type">sales</field>
+        <field name="status">available</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

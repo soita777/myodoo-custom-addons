@@ -71,3 +71,7 @@ Thumbs.db
 *.swp
 pids/
 *.pid.lock
+
+# Python cache files
+__pycache__/
+*.py[cod]
