@@ -1,0 +1,5 @@
+<odoo>
+    <menuitem id="menu_temperature_guru_root" name="Temperature Guru" sequence="42" groups="temperature_guru.group_temperature_guru_user" action="action_temperature_guru_dashboard"/>
+    <menuitem id="menu_temperature_guru_devices" name="Devices" parent="menu_temperature_guru_root" action="action_temperature_guru_devices" sequence="10" groups="temperature_guru.group_temperature_guru_user"/>
+    <menuitem id="menu_temperature_guru_readings" name="Readings" parent="menu_temperature_guru_root" action="action_temperature_guru_readings" sequence="20" groups="temperature_guru.group_temperature_guru_user"/>
+</odoo>

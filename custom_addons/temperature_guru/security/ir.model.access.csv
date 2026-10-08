@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_temperature_device_user,temperature.guru.device user,model_temperature_guru_device,group_temperature_guru_user,1,0,0,0
+access_temperature_device_manager,temperature.guru.device manager,model_temperature_guru_device,group_temperature_guru_manager,1,1,1,0
+access_temperature_reading_user,temperature.guru.reading user,model_temperature_guru_reading,group_temperature_guru_user,1,0,1,0
+access_temperature_reading_manager,temperature.guru.reading manager,model_temperature_guru_reading,group_temperature_guru_manager,1,1,1,0
+access_temperature_branch_user,temperature.guru.branch user,chebu_inventory_movement.model_chebu_inventory_branch,group_temperature_guru_user,1,0,0,0

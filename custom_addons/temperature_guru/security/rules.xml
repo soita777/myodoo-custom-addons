@@ -1,0 +1,14 @@
+<odoo>
+    <record id="rule_temperature_device_company" model="ir.rule">
+        <field name="name">Temperature devices: allowed companies</field>
+        <field name="model_id" ref="model_temperature_guru_device"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+    <record id="rule_temperature_reading_company" model="ir.rule">
+        <field name="name">Temperature readings: allowed companies</field>
+        <field name="model_id" ref="model_temperature_guru_reading"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+</odoo>

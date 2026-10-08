@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_temperature_guru_device_kanban" model="ir.ui.view">
+        <field name="name">temperature.guru.device.kanban</field>
+        <field name="model">temperature.guru.device</field>
+        <field name="arch" type="xml">
+            <kanban default_order="branch_id, name" class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="device_type"/>
+                <field name="branch_id"/>
+                <field name="location"/>
+                <field name="current_temperature"/>
+                <field name="current_status"/>
+                <field name="last_reading_at"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="tg-device-kanban-card tg-status-{{ record.current_status.raw_value }}">
+                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                <div>
+                                    <span class="tg-device-code"><field name="code"/></span>
+                                    <strong class="d-block tg-device-title"><field name="name"/></strong>
+                                    <span class="text-muted"><field name="branch_id"/> · <field name="location"/></span>
+                                </div>
+                                <field name="current_status" widget="badge"/>
+                            </div>
+                            <div class="tg-kanban-reading">
+                                <strong><field name="current_temperature"/> °C</strong>
+                                <span><field name="device_type"/></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <field name="last_reading_at"/>
+                                <button name="action_view_readings" type="object" class="btn btn-secondary btn-sm" icon="fa-line-chart" string="History"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_temperature_guru_device_list" model="ir.ui.view">
+        <field name="name">temperature.guru.device.list</field>
+        <field name="model">temperature.guru.device</field>
+        <field name="arch" type="xml">
+            <list string="Temperature Devices" decoration-danger="current_status in ('low', 'high')" decoration-warning="current_status in ('offline', 'no_data')" decoration-muted="not active">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="device_type"/>
+                <field name="branch_id"/>
+                <field name="location"/>
+                <field name="current_temperature"/>
+                <field name="minimum_temperature" optional="hide"/>
+                <field name="maximum_temperature" optional="hide"/>
+                <field name="current_status" widget="badge"/>
+                <field name="last_reading_at"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_temperature_guru_device_search" model="ir.ui.view">
+        <field name="name">temperature.guru.device.search</field>
+        <field name="model">temperature.guru.device</field>
+        <field name="arch" type="xml">
+            <search string="Search Temperature Devices">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="serial_number"/>
+                <field name="branch_id"/>
+                <field name="location"/>
+                <filter name="maintenance" string="In Maintenance" domain="[('is_maintenance', '=', True)]"/>
+                <separator/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_branch" string="Branch" context="{'group_by': 'branch_id'}"/>
+                    <filter name="group_device_type" string="Device Type" context="{'group_by': 'device_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_temperature_guru_device_form" model="ir.ui.view">
+        <field name="name">temperature.guru.device.form</field>
+        <field name="model">temperature.guru.device</field>
+        <field name="arch" type="xml">
+            <form string="Temperature Device">
+                <header>
+                    <button name="action_view_readings" type="object" string="Reading History" icon="fa-line-chart"/>
+                    <field name="current_status" widget="statusbar" statusbar_visible="normal,low,high,offline,no_data,maintenance"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_readings" type="object" class="oe_stat_button" icon="fa-thermometer-half">
+                            <field name="reading_count" widget="statinfo" string="Readings"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Monitor Name"/>
+                        <h1><field name="name" placeholder="e.g. Vaccine Fridge A"/></h1>
+                        <div class="d-flex align-items-center gap-2">
+                            <field name="code" readonly="1"/>
+                            <field name="current_status" widget="badge" readonly="1"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="Location">
+                            <field name="branch_id" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="location" placeholder="Room, cabinet or storage zone"/>
+                            <field name="device_type"/>
+                            <field name="serial_number"/>
+                        </group>
+                        <group string="Safety Range">
+                            <field name="minimum_temperature"/>
+                            <field name="maximum_temperature"/>
+                            <field name="stale_after_hours"/>
+                            <field name="is_maintenance"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Latest Reading">
+                        <field name="current_temperature" readonly="1"/>
+                        <field name="last_reading_at" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Reading History">
+                            <field name="reading_ids" readonly="1">
+                                <list create="false" edit="false" delete="false" default_order="measured_at desc">
+                                    <field name="measured_at"/>
+                                    <field name="temperature_c"/>
+                                    <field name="status" widget="badge"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes"><field name="note" placeholder="Maintenance notes and sensor details..."/></page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_temperature_guru_reading_list" model="ir.ui.view">
+        <field name="name">temperature.guru.reading.list</field>
+        <field name="model">temperature.guru.reading</field>
+        <field name="arch" type="xml">
+            <list string="Temperature Readings" create="1" edit="false" delete="false" decoration-danger="status in ('low', 'high')">
+                <field name="measured_at"/>
+                <field name="device_id"/>
+                <field name="branch_id"/>
+                <field name="temperature_c"/>
+                <field name="status" widget="badge"/>
+                <field name="note" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_temperature_guru_reading_search" model="ir.ui.view">
+        <field name="name">temperature.guru.reading.search</field>
+        <field name="model">temperature.guru.reading</field>
+        <field name="arch" type="xml">
+            <search string="Search Temperature Readings">
+                <field name="device_id"/>
+                <field name="branch_id"/>
+                <filter name="alerts" string="Out of Range" domain="[('status', 'in', ['low', 'high'])]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_branch" string="Branch" context="{'group_by': 'branch_id'}"/>
+                    <filter name="group_device" string="Device" context="{'group_by': 'device_id'}"/>
+                    <filter name="group_day" string="Day" context="{'group_by': 'measured_at:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_temperature_guru_reading_form" model="ir.ui.view">
+        <field name="name">temperature.guru.reading.form</field>
+        <field name="model">temperature.guru.reading</field>
+        <field name="arch" type="xml">
+            <form string="Log Temperature Reading">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="device_id" string="Temperature Monitor"/>
+                        <h1><field name="device_id" options="{'no_create': True}"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="measured_at"/>
+                            <field name="temperature_c"/>
+                        </group>
+                        <group>
+                            <field name="branch_id" readonly="1"/>
+                            <field name="status" widget="badge" readonly="1"/>
+                            <field name="note" placeholder="Optional observation"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_temperature_guru_reading_graph" model="ir.ui.view">
+        <field name="name">temperature.guru.reading.graph</field>
+        <field name="model">temperature.guru.reading</field>
+        <field name="arch" type="xml">
+            <graph string="Temperature Trends" type="line">
+                <field name="measured_at" interval="day"/>
+                <field name="temperature_c" type="measure"/>
+                <field name="branch_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_temperature_guru_reading_pivot" model="ir.ui.view">
+        <field name="name">temperature.guru.reading.pivot</field>
+        <field name="model">temperature.guru.reading</field>
+        <field name="arch" type="xml">
+            <pivot string="Temperature Analysis">
+                <field name="branch_id" type="row"/>
+                <field name="device_id" type="row"/>
+                <field name="measured_at" interval="day" type="col"/>
+                <field name="temperature_c" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_temperature_guru_dashboard" model="ir.actions.client">
+        <field name="name">Temperature Guru</field>
+        <field name="tag">temperature_guru.dashboard</field>
+    </record>
+
+    <record id="action_temperature_guru_devices" model="ir.actions.act_window">
+        <field name="name">Temperature Devices</field>
+        <field name="res_model">temperature.guru.device</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_temperature_guru_device_search"/>
+        <field name="context">{'search_default_group_branch': 0}</field>
+    </record>
+
+    <record id="action_temperature_guru_new_device" model="ir.actions.act_window">
+        <field name="name">Add Temperature Device</field>
+        <field name="res_model">temperature.guru.device</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_temperature_guru_device_form"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_temperature_guru_readings" model="ir.actions.act_window">
+        <field name="name">Temperature Readings</field>
+        <field name="res_model">temperature.guru.reading</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="search_view_id" ref="view_temperature_guru_reading_search"/>
+    </record>
+
+    <record id="action_temperature_guru_new_reading" model="ir.actions.act_window">
+        <field name="name">Log Temperature Reading</field>
+        <field name="res_model">temperature.guru.reading</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_temperature_guru_reading_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

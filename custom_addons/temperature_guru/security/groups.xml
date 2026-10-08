@@ -1,0 +1,12 @@
+<odoo>
+    <record id="group_temperature_guru_user" model="res.groups">
+        <field name="name">Temperature Guru User</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+    </record>
+    <record id="group_temperature_guru_manager" model="res.groups">
+        <field name="name">Temperature Guru Manager</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="implied_ids" eval="[(4, ref('group_temperature_guru_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

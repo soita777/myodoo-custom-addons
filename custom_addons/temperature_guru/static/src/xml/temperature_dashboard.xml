@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="temperature_guru.Dashboard" owl="1">
+        <main class="tg-dashboard">
+            <header class="tg-hero">
+                <div class="tg-hero-copy">
+                    <span class="tg-eyebrow">CHEBU · COLD-CHAIN OPERATIONS</span>
+                    <h1>Temperature Guru</h1>
+                    <p>Every monitor, every branch, one clear view of product safety.</p>
+                </div>
+                <div class="tg-hero-actions">
+                    <button class="btn tg-button tg-button-quiet" t-on-click="refresh" title="Refresh readings">
+                        <i class="fa fa-refresh"/> Refresh
+                    </button>
+                    <button class="btn tg-button tg-button-outline" t-on-click="openReadings">
+                        <i class="fa fa-list-alt"/> Reading log
+                    </button>
+                    <button class="btn tg-button tg-button-primary" t-on-click="addDevice">
+                        <i class="fa fa-plus"/> Add device
+                    </button>
+                </div>
+            </header>
+
+            <section class="tg-toolbar" aria-label="Dashboard filters">
+                <div class="tg-filter-label"><i class="fa fa-map-marker"/> Branch</div>
+                <select class="form-select tg-branch-select" t-att-value="state.branchId" t-on-change="onBranchChange">
+                    <option value="all">All available branches</option>
+                    <t t-foreach="state.data?.branches || []" t-as="branch" t-key="branch.id">
+                        <option t-att-value="branch.id" t-esc="branch.name"/>
+                    </t>
+                </select>
+                <span class="tg-period"><i class="fa fa-clock-o"/> Trends · Last 24 hours</span>
+            </section>
+
+            <t t-if="state.loading">
+                <div class="tg-loading"><span class="tg-spinner"/> Loading temperature data</div>
+            </t>
+            <t t-elif="state.error">
+                <div class="alert alert-danger" role="alert"><t t-esc="state.error"/></div>
+            </t>
+            <t t-elif="state.data">
+                <section class="tg-metrics">
+                    <article class="tg-metric tg-metric-devices">
+                        <span class="tg-metric-icon"><i class="fa fa-thermometer-half"/></span>
+                        <span class="tg-metric-label">Active monitors</span>
+                        <strong t-esc="state.data.summary.device_count"/>
+                        <small>Across selected branches</small>
+                    </article>
+                    <article class="tg-metric tg-metric-normal">
+                        <span class="tg-metric-icon"><i class="fa fa-check"/></span>
+                        <span class="tg-metric-label">In safe range</span>
+                        <strong t-esc="state.data.summary.normal_count"/>
+                        <small>Latest device readings</small>
+                    </article>
+                    <article class="tg-metric tg-metric-alert">
+                        <span class="tg-metric-icon"><i class="fa fa-exclamation-triangle"/></span>
+                        <span class="tg-metric-label">Needs attention</span>
+                        <strong t-esc="state.data.summary.attention_count"/>
+                        <small>Out of range or offline</small>
+                    </article>
+                    <article class="tg-metric tg-metric-average">
+                        <span class="tg-metric-icon"><i class="fa fa-line-chart"/></span>
+                        <span class="tg-metric-label">Average now</span>
+                        <strong t-esc="this.formatTemperature(state.data.summary.average_temperature)"/>
+                        <small t-esc="`${state.data.summary.reading_count} readings in 24h`"/>
+                    </article>
+                </section>
+
+                <section class="tg-main-grid">
+                    <div class="tg-section tg-devices-section">
+                        <div class="tg-section-heading">
+                            <div>
+                                <span class="tg-section-kicker">LIVE MONITORS</span>
+                                <h2>Device status</h2>
+                            </div>
+                            <button class="btn tg-link-button" t-on-click="openDevices">Manage devices <i class="fa fa-arrow-right"/></button>
+                        </div>
+                        <t t-if="state.data.devices.length">
+                            <div class="tg-device-grid">
+                                <article t-foreach="state.data.devices" t-as="device" t-key="device.id" t-attf-class="tg-device-card tg-device-{{device.current_status}}">
+                                    <div class="tg-device-card-head">
+                                        <div class="tg-device-symbol"><i class="fa fa-thermometer-half"/></div>
+                                        <span t-attf-class="tg-status-pill tg-pill-{{device.current_status}}" t-esc="this.statusLabel(device.current_status)"/>
+                                    </div>
+                                    <div class="tg-device-ident">
+                                        <span t-esc="device.code"/>
+                                        <h3 t-esc="device.name"/>
+                                        <p><t t-esc="device.branch_name"/> <span>·</span> <t t-esc="device.location"/></p>
+                                    </div>
+                                    <div class="tg-current-reading">
+                                        <strong t-esc="this.formatTemperature(device.last_reading_at ? device.current_temperature : false)"/>
+                                        <span t-esc="`Safe range ${device.minimum_temperature.toFixed(1)}–${device.maximum_temperature.toFixed(1)} °C`"/>
+                                    </div>
+                                    <svg class="tg-sparkline" viewBox="0 0 100 44" preserveAspectRatio="none" aria-label="Recent temperature trend">
+                                        <path t-att-d="this.sparkline(device.chart_values)"/>
+                                    </svg>
+                                    <div class="tg-device-card-foot">
+                                        <span><i class="fa fa-clock-o"/> <t t-esc="this.formatDate(device.last_reading_at)"/></span>
+                                        <button class="btn tg-log-button" t-on-click="() => this.logReading(device.id, device.branch_id[0])" title="Log reading">
+                                            <i class="fa fa-plus"/> Reading
+                                        </button>
+                                    </div>
+                                </article>
+                            </div>
+                        </t>
+                        <div t-else="" class="tg-empty-state">
+                            <div class="tg-empty-icon"><i class="fa fa-snowflake-o"/></div>
+                            <h3>No monitors registered yet</h3>
+                            <p>Add a temperature device, assign its branch and safe range, then start logging readings.</p>
+                            <button class="btn tg-button tg-button-primary" t-on-click="addDevice"><i class="fa fa-plus"/> Add first device</button>
+                        </div>
+                    </div>
+
+                    <aside class="tg-section tg-branch-section">
+                        <div class="tg-section-heading">
+                            <div>
+                                <span class="tg-section-kicker">BRANCH COMPARISON</span>
+                                <h2>24-hour averages</h2>
+                            </div>
+                        </div>
+                        <t t-if="state.data.branches.length">
+                            <div class="tg-branch-list">
+                                <div t-foreach="state.data.branches" t-as="branch" t-key="branch.id" class="tg-branch-row">
+                                    <div class="tg-branch-row-heading">
+                                        <strong t-esc="branch.name"/>
+                                        <span t-if="typeof branch.average === 'number'" t-esc="this.formatTemperature(branch.average)"/>
+                                        <span t-else="">No readings</span>
+                                    </div>
+                                    <div class="tg-branch-track"><span t-att-style="`width: ${this.branchBarWidth(branch)}%`"/></div>
+                                    <small t-esc="`${branch.reading_count} readings`"/>
+                                </div>
+                            </div>
+                        </t>
+                        <div t-else="" class="tg-empty-branch">No active branches are configured for your company.</div>
+                        <div class="tg-branch-note"><i class="fa fa-info-circle"/> Averages use readings recorded in the last 24 hours.</div>
+                    </aside>
+                </section>
+
+                <section class="tg-section tg-recent-section">
+                    <div class="tg-section-heading">
+                        <div>
+                            <span class="tg-section-kicker">AUDIT TRAIL</span>
+                            <h2>Latest readings</h2>
+                        </div>
+                        <button class="btn tg-link-button" t-on-click="openReadings">Full reading log <i class="fa fa-arrow-right"/></button>
+                    </div>
+                    <t t-if="state.data.recent_readings.length">
+                        <div class="table-responsive">
+                            <table class="table tg-readings-table">
+                                <thead><tr><th>Device</th><th>Branch</th><th>Temperature</th><th>Status</th><th>Recorded</th><th>Note</th></tr></thead>
+                                <tbody>
+                                    <tr t-foreach="state.data.recent_readings" t-as="reading" t-key="reading.id">
+                                        <td><strong t-esc="reading.device_name"/><small t-esc="reading.device_code"/></td>
+                                        <td t-esc="reading.branch_name"/>
+                                        <td class="tg-table-temperature" t-esc="this.formatTemperature(reading.temperature_c)"/>
+                                        <td><span t-attf-class="tg-status-pill tg-pill-{{reading.status}}" t-esc="this.statusLabel(reading.status)"/></td>
+                                        <td t-esc="this.formatDate(reading.measured_at)"/>
+                                        <td t-esc="reading.note || '—'"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                    <p t-else="" class="tg-no-readings">No readings recorded during the last 24 hours.</p>
+                </section>
+            </t>
+        </main>
+    </t>
+</templates>

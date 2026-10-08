@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+    <record id="sequence_temperature_guru_device" model="ir.sequence">
+        <field name="name">Temperature Guru Device</field>
+        <field name="code">temperature.guru.device</field>
+        <field name="prefix">TG-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>
