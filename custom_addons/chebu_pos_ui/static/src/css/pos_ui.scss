@@ -1,0 +1,133 @@
+$chebu-ink: #1d2a2a;
+$chebu-muted: #6b7977;
+$chebu-surface: #f5f7f4;
+$chebu-panel: #ffffff;
+$chebu-teal: #0f766e;
+$chebu-teal-dark: #115e59;
+$chebu-coral: #e76f51;
+
+.chebu-pos-screen {
+    --chebu-ink: #{$chebu-ink};
+    --chebu-muted: #{$chebu-muted};
+    --chebu-surface: #{$chebu-surface};
+    --chebu-panel: #{$chebu-panel};
+    --chebu-teal: #{$chebu-teal};
+    --chebu-coral: #{$chebu-coral};
+    background: var(--chebu-surface);
+    color: var(--chebu-ink);
+
+    .leftpane,
+    .rightpane {
+        border: 0;
+    }
+
+    .leftpane {
+        background: var(--chebu-panel);
+        border-right: 1px solid rgba(29, 42, 42, 0.1);
+        box-shadow: 8px 0 24px rgba(29, 42, 42, 0.04);
+    }
+
+    .rightpane.chebu-pos-catalog {
+        background: var(--chebu-surface);
+        padding: 1rem;
+    }
+
+    .product-list {
+        gap: 0.85rem !important;
+        padding: 0.25rem !important;
+        align-content: start;
+    }
+
+    .product-list .product {
+        border: 1px solid rgba(29, 42, 42, 0.08);
+        border-radius: 12px;
+        background: var(--chebu-panel);
+        box-shadow: 0 3px 12px rgba(29, 42, 42, 0.05);
+        overflow: hidden;
+        transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .product-list .product:hover,
+    .product-list .product:focus-within {
+        border-color: rgba(15, 118, 110, 0.5);
+        box-shadow: 0 8px 20px rgba(15, 118, 110, 0.14);
+        transform: translateY(-2px);
+    }
+
+    .product-list .product .product-img {
+        background: #edf2ef;
+    }
+
+    .product-list .product .product-name {
+        color: var(--chebu-ink);
+        font-weight: 600;
+    }
+
+    .product-list .product .product-price {
+        color: var(--chebu-teal-dark);
+        font-weight: 700;
+    }
+
+    .category-button,
+    .control-button,
+    .numpad-button,
+    .actionpad .button {
+        border-radius: 9px !important;
+        transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+
+    .category-button:hover,
+    .control-button:hover,
+    .numpad-button:hover,
+    .actionpad .button:hover {
+        transform: translateY(-1px);
+    }
+
+    .category-button.selected {
+        background: var(--chebu-teal) !important;
+        color: #fff !important;
+    }
+
+    .chebu-pos-order-panel {
+        background: var(--chebu-panel);
+        border-radius: 12px 0 0 12px;
+        box-shadow: 0 4px 22px rgba(29, 42, 42, 0.07);
+        overflow: hidden;
+    }
+
+    .orderline {
+        border-bottom: 1px solid rgba(29, 42, 42, 0.08);
+        padding-block: 0.55rem;
+    }
+
+    .payment-screen .paymentmethods .button.selected,
+    .payment-screen .payment-buttons .button.selected {
+        background: var(--chebu-teal) !important;
+        color: #fff !important;
+    }
+
+    .btn-primary,
+    .button.highlight,
+    .payment-screen .button.validate {
+        background: var(--chebu-coral) !important;
+        border-color: var(--chebu-coral) !important;
+        border-radius: 9px !important;
+        font-weight: 700;
+    }
+}
+
+@media (max-width: 768px) {
+    .chebu-pos-screen {
+        .rightpane.chebu-pos-catalog {
+            padding: 0.6rem;
+        }
+
+        .product-list {
+            gap: 0.55rem !important;
+        }
+
+        .chebu-pos-order-panel {
+            border-radius: 12px 12px 0 0;
+        }
+    }
+}

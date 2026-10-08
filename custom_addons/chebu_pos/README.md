@@ -38,7 +38,7 @@ The register model stores:
 
 ## POS workflow
 
-Users select an available register at the POS login screen and then continue with the built-in Odoo POS login flow. The register is claimed server-side before the POS app continues.
+Users select an available register at the POS login screen and then continue with the built-in Odoo POS flow. The selected register is linked to the active POS session, so native product browsing, checkout, payment, and receipt printing continue to work without duplicating Odoo's sales logic. POS orders remain linked to that register through their session and can be opened from the register's Transactions button. Closing the session releases the register for the next cashier while preserving the session link for transaction history.
 
 ## Security notes
 

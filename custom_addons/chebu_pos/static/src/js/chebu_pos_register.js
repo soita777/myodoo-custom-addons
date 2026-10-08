@@ -19,7 +19,20 @@ export class ChebuLoginScreen extends PosLoginScreen {
                 []
             );
             this.chebuRegisters = registers || [];
-            if (this.chebuRegisters.length) {
+            const requestedRegisterId = Number(
+                new URLSearchParams(window.location.search).get("chebu_register_id")
+            );
+            const requestedRegister = this.chebuRegisters.find(
+                (register) => register.id === requestedRegisterId
+            );
+            const canResumeRequested =
+                requestedRegister &&
+                (requestedRegister.status === "available" ||
+                    (requestedRegister.status === "active" &&
+                        requestedRegister.user_id === this.pos.user.id));
+            if (canResumeRequested) {
+                this.selectedRegisterId = requestedRegister.id;
+            } else if (this.chebuRegisters.length) {
                 const available = this.chebuRegisters.find(
                     (register) => register.status === "available"
                 );
@@ -44,8 +57,15 @@ export class ChebuLoginScreen extends PosLoginScreen {
         );
     }
 
+    canUseRegister(register) {
+        return (
+            register.status === "available" ||
+            (register.status === "active" && register.user_id === this.pos.user.id)
+        );
+    }
+
     selectRegister(register) {
-        if (register.status !== "available") {
+        if (!this.canUseRegister(register)) {
             this.pos.notification.add(_t("Register already in use."), { type: "danger" });
             return;
         }
@@ -71,7 +91,7 @@ export class ChebuLoginScreen extends PosLoginScreen {
             );
             return;
         }
-        if (chosen.status !== "available") {
+        if (!this.canUseRegister(chosen)) {
             this.pos.notification.add(_t("Register already in use."), { type: "danger" });
             return;
         }
@@ -101,4 +121,4 @@ export class ChebuLoginScreen extends PosLoginScreen {
     }
 }
 
-registry.category("pos_screens").add("LoginScreen", ChebuLoginScreen);
+registry.category("pos_screens").add("LoginScreen", ChebuLoginScreen, { force: true });

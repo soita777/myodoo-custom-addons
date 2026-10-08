@@ -7,19 +7,35 @@
         <xpath expr="//div[hasclass('login-body')]" position="inside">
             <div class="chebu-register-panel">
                 <div class="chebu-register-panel-header">
-                    <span class="chebu-register-title">CHEBU POS</span>
-                    <span class="chebu-register-subtitle">Select an available register</span>
+                    <div>
+                        <span class="chebu-register-kicker">CHEBU POS</span>
+                        <h2 class="chebu-register-title">Choose your station</h2>
+                        <span class="chebu-register-subtitle">Select an available register to get started</span>
+                    </div>
+                    <span class="chebu-register-live"><i class="fa fa-circle"/> Live registers</span>
                 </div>
                 <div class="chebu-register-grid">
-                    <button t-foreach="chebuRegisters" t-as="register"
+                    <button t-foreach="chebuRegisters" t-as="register" t-key="register.id"
                             t-att-class="'chebu-register-card ' + ((register.id === selectedRegisterId) ? 'selected' : '') + ((register.status !== 'available') ? ' occupied' : '')"
-                            t-att-disabled="register.status !== 'available' or loadingRegisters"
+                            t-att-disabled="!this.canUseRegister(register) || loadingRegisters"
+                            t-att-aria-pressed="register.id === selectedRegisterId"
                             t-on-click="() => this.selectRegister(register)">
+                        <span class="chebu-register-card-top">
+                            <span class="chebu-register-icon">
+                                <i t-if="register.register_type === 'cashier'" class="fa fa-credit-card"/>
+                                <i t-else="" class="fa fa-shopping-bag"/>
+                            </span>
+                            <span class="chebu-register-status" t-esc="register.status_label"/>
+                        </span>
                         <span class="chebu-register-name" t-esc="register.name"/>
-                        <span class="chebu-register-code" t-esc="register.code"/>
                         <span class="chebu-register-type" t-esc="register.register_type_label"/>
-                        <span class="chebu-register-status" t-esc="register.status_label"/>
-                        <span class="chebu-register-user" t-esc="register.user_name or 'Available'"/>
+                        <span class="chebu-register-card-bottom">
+                            <span class="chebu-register-code" t-esc="register.code"/>
+                            <span class="chebu-register-user" t-esc="register.user_name or 'Ready for you'"/>
+                        </span>
+                        <span t-if="register.id === selectedRegisterId" class="chebu-register-selected-mark">
+                            <i class="fa fa-check"/>
+                        </span>
                     </button>
                 </div>
             </div>
