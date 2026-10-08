@@ -1,25 +1,25 @@
 $chebu-ink: #1d2a2a;
-$chebu-surface: #f5f7f4;
+$chebu-surface: #f1f5f2;
 $chebu-panel: #ffffff;
-$chebu-muted: #697a77;
-$chebu-teal: #0f766e;
-$chebu-teal-dark: #115e59;
-$chebu-coral: #e76f51;
+$chebu-muted: #66736f;
+$chebu-teal: #087f68;
+$chebu-teal-dark: #075c4d;
+$chebu-coral: #df654b;
 
 .chebu-login-body {
     flex-direction: column !important;
-    width: min(1100px, 100%);
-    gap: 1rem;
+    width: 100%;
+    max-width: 1240px;
+    gap: 1.5rem;
     align-items: stretch;
 }
 
 .chebu-register-panel {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(29, 42, 42, 0.08);
-    border-radius: 18px;
-    box-shadow: 0 8px 24px rgba(29, 42, 42, 0.08);
-    padding: 1.25rem;
-    backdrop-filter: blur(4px);
+    background: $chebu-surface;
+    border: 1px solid rgba(29, 42, 42, 0.07);
+    border-radius: 22px;
+    box-shadow: 0 24px 64px rgba(25, 45, 39, 0.14);
+    padding: clamp(1.25rem, 3vw, 2.5rem);
 }
 
 .chebu-register-panel-header {
@@ -27,14 +27,23 @@ $chebu-coral: #e76f51;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.75rem;
     color: $chebu-ink;
 }
 
+.chebu-register-kicker {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: $chebu-teal;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
 .chebu-register-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    margin: 0 0 0.35rem;
+    font-size: 1.8rem;
+    font-weight: 750;
 }
 
 .chebu-register-subtitle {
@@ -42,52 +51,100 @@ $chebu-coral: #e76f51;
     font-size: 0.92rem;
 }
 
+.chebu-register-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+    color: $chebu-teal-dark;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.chebu-register-live .fa {
+    color: $chebu-teal;
+    font-size: 0.55rem;
+}
+
 .chebu-register-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
 }
 
 .chebu-register-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.45rem;
-    min-height: 160px;
-    padding: 1rem;
+    gap: 0.55rem;
+    min-height: 230px;
+    padding: 1.4rem;
+    overflow: hidden;
     border: 1px solid rgba(29, 42, 42, 0.08);
-    border-radius: 14px;
-    background: #f8faf7;
+    border-radius: 18px;
+    background: $chebu-panel;
     color: $chebu-ink;
     text-align: left;
-    transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    box-shadow: 0 10px 22px rgba(29, 42, 42, 0.07);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.chebu-register-card:hover {
-    transform: translateY(-1px);
-    border-color: rgba(15, 118, 110, 0.35);
-    box-shadow: 0 8px 18px rgba(15, 118, 110, 0.12);
+.chebu-register-card:not(:disabled) {
+    cursor: pointer;
+}
+
+.chebu-register-card:not(:disabled):hover {
+    transform: translateY(-5px);
+    border-color: rgba(8, 127, 104, 0.38);
+    box-shadow: 0 20px 34px rgba(8, 82, 66, 0.16);
+}
+
+.chebu-register-card:focus-visible {
+    outline: 3px solid rgba(8, 127, 104, 0.42);
+    outline-offset: 3px;
+}
+
+.chebu-register-card-top,
+.chebu-register-card-bottom {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.chebu-register-icon {
+    display: grid;
+    width: 64px;
+    height: 64px;
+    place-items: center;
+    border-radius: 20px;
+    background: #e2f2eb;
+    color: $chebu-teal-dark;
+    font-size: 1.7rem;
 }
 
 .chebu-register-card.selected {
-    border-color: $chebu-teal;
-    background: rgba(15, 118, 110, 0.06);
-    box-shadow: 0 10px 18px rgba(15, 118, 110, 0.16);
+    border: 2px solid $chebu-teal;
+    background: #f5fbf7;
+    box-shadow: 0 18px 34px rgba(8, 82, 66, 0.17);
 }
 
 .chebu-register-card.occupied {
-    opacity: 0.72;
-    background: rgba(105, 122, 119, 0.05);
+    cursor: not-allowed;
+    background: #f4f4f1;
+    box-shadow: none;
 }
 
 .chebu-register-name {
-    font-size: 1.2rem;
-    font-weight: 700;
+    margin-top: 0.7rem;
+    font-size: 1.5rem;
+    font-weight: 750;
 }
 
 .chebu-register-code {
     font-size: 0.8rem;
-    letter-spacing: 0.08em;
     color: $chebu-muted;
     text-transform: uppercase;
 }
@@ -95,35 +152,131 @@ $chebu-coral: #e76f51;
 .chebu-register-type,
 .chebu-register-status,
 .chebu-register-user {
-    font-size: 0.82rem;
+    font-size: 0.88rem;
 }
 
 .chebu-register-status {
     display: inline-flex;
     align-items: center;
-    background: rgba(15, 118, 110, 0.12);
+    background: #e4f3eb;
     color: $chebu-teal-dark;
     border-radius: 999px;
-    padding: 0.28rem 0.6rem;
+    padding: 0.38rem 0.7rem;
     font-weight: 600;
 }
 
 .chebu-register-card.occupied .chebu-register-status {
-    background: rgba(231, 111, 81, 0.12);
-    color: darken($chebu-coral, 12%);
+    background: #fbe9e3;
+    color: darken($chebu-coral, 18%);
 }
 
 .chebu-register-user {
     color: $chebu-muted;
+    font-size: 0.78rem;
+}
+
+.chebu-register-selected-mark {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border-radius: 50%;
+    background: $chebu-teal;
+    color: #fff;
 }
 
 @media (max-width: 768px) {
-    .chebu-register-panel {
-        padding: 1rem;
-    }
-
     .chebu-register-panel-header {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .chebu-register-card {
+        min-height: 205px;
+    }
+}
+
+@media (max-width: 540px) {
+    .chebu-register-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chebu-register-card {
+        transition: none;
+    }
+}
+
+.o_chebu_register_dashboard {
+    --chebu-ink: #20322d;
+    --chebu-muted: #6a7973;
+    --chebu-green: #087f68;
+    --chebu-coral: #d9684f;
+
+    .o_chebu_register_metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin: 20px 0 28px;
+    }
+
+    .o_chebu_register_metric {
+        display: flex;
+        min-width: 0;
+        min-height: 142px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        padding: 20px 22px;
+        border: 1px solid #e3e9e5;
+        border-top: 3px solid var(--chebu-green);
+        border-radius: 6px;
+        background: #fbfcfa;
+    }
+
+    .o_chebu_metric_collection {
+        border-top-color: var(--chebu-coral);
+    }
+
+    .o_chebu_metric_total {
+        border-top-color: #d7a334;
+    }
+
+    .o_chebu_metric_label {
+        color: var(--chebu-muted);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .o_chebu_register_metric strong {
+        overflow-wrap: anywhere;
+        color: var(--chebu-ink);
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    .o_chebu_metric_note {
+        color: var(--chebu-muted);
+        font-size: 12px;
+    }
+
+    .oe_title .o_row {
+        align-items: center;
+        gap: 14px;
+        color: var(--chebu-muted);
+    }
+
+    .o_notebook {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 767px) {
+    .o_chebu_register_dashboard .o_chebu_register_metrics {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

@@ -12,6 +12,9 @@
         "views/chebu_pos_register_views.xml",
     ],
     "assets": {
+        "web.assets_backend": [
+            "chebu_pos/static/src/scss/chebu_pos_register.scss",
+        ],
         "point_of_sale._assets_pos": [
             "chebu_pos/static/src/js/chebu_pos_register.js",
             "chebu_pos/static/src/xml/chebu_pos_register.xml",

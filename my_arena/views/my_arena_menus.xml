@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <menuitem
         id="my_arena_root_menu"
         name="My Arena"
@@ -14,4 +15,11 @@
         action="my_arena_note_action"
         sequence="10"
     />
+
+    <menuitem id="my_arena_active_menu" name="Active Notes" parent="my_arena_root_menu" action="my_arena_note_action" context="{'search_default_active_notes': 1}" sequence="20"/>
+    <menuitem id="my_arena_pinned_menu" name="Pinned" parent="my_arena_root_menu" action="my_arena_note_action" context="{'search_default_pinned': 1, 'search_default_active_notes': 1}" sequence="30"/>
+    <menuitem id="my_arena_important_menu" name="Important" parent="my_arena_root_menu" action="my_arena_note_action" context="{'search_default_important': 1, 'search_default_active_notes': 1}" sequence="40"/>
+    <menuitem id="my_arena_archive_menu" name="Archive" parent="my_arena_root_menu" action="my_arena_note_action" context="{'search_default_archived': 1}" sequence="50"/>
+    <menuitem id="my_arena_tags_menu" name="Tags" parent="my_arena_root_menu" action="my_arena_note_tag_action" sequence="60"/>
+    </data>
 </odoo>

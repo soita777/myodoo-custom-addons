@@ -1,5 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="rule_chebu_pos_register_company" model="ir.rule">
+        <field name="name">POS registers: allowed companies</field>
+        <field name="model_id" ref="model_chebu_pos_register"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+
+    <record id="view_chebu_pos_register_kanban" model="ir.ui.view">
+        <field name="name">chebu.pos.register.kanban</field>
+        <field name="model">chebu.pos.register</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_order="name">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="register_type"/>
+                <field name="status"/>
+                <field name="user_id"/>
+                <field name="session_id"/>
+                <field name="pos_config_id"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="d-flex flex-column gap-3 p-3 h-100 {{ record.status.raw_value === 'available' ? 'border-success' : (record.status.raw_value === 'active' ? 'border-info' : 'border-warning') }}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="fa fa-credit-card fa-2x text-success" t-if="record.register_type.raw_value === 'cashier'"/>
+                                    <span class="fa fa-shopping-bag fa-2x text-warning" t-else=""/>
+                                    <div>
+                                        <strong class="d-block fs-4"><field name="name"/></strong>
+                                        <span class="text-muted"><field name="code"/></span>
+                                    </div>
+                                </div>
+                                <span t-attf-class="badge rounded-pill {{ record.status.raw_value === 'available' ? 'text-bg-success' : (record.status.raw_value === 'active' ? 'text-bg-info' : 'text-bg-warning') }}">
+                                    <field name="status"/>
+                                </span>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2 text-muted">
+                                <span><field name="register_type"/></span>
+                                <span t-if="record.user_id.value">- <field name="user_id"/></span>
+                                <span t-if="record.pos_config_id.value">- <field name="pos_config_id"/></span>
+                            </div>
+                            <div class="mt-auto d-flex justify-content-end">
+                                <a type="open" class="btn btn-primary btn-lg px-4">
+                                    <i class="fa fa-arrow-right me-2"/>Open sales workspace
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="view_chebu_pos_register_tree" model="ir.ui.view">
         <field name="name">chebu.pos.register.tree</field>
         <field name="model">chebu.pos.register</field>
@@ -21,23 +74,91 @@
         <field name="name">chebu.pos.register.form</field>
         <field name="model">chebu.pos.register</field>
         <field name="arch" type="xml">
-            <form string="Chebu POS Register">
+            <form string="Sales Workspace" create="false" edit="false" delete="false" class="o_chebu_register_dashboard">
+                <header>
+                    <button name="action_start_sale" type="object" string="New Sale" class="oe_highlight" icon="fa-shopping-cart"/>
+                    <button name="action_open_settings" type="object" string="Settings" icon="fa-cog" groups="point_of_sale.group_pos_manager"/>
+                </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pos_orders" type="object" class="oe_stat_button" icon="fa-receipt">
+                            <field name="order_count" widget="statinfo" string="Transactions"/>
+                        </button>
+                        <button name="action_view_pos_session" type="object" class="oe_stat_button" icon="fa-desktop" invisible="not session_id">
+                            <div class="o_stat_info"><span class="o_stat_text">Open Session</span></div>
+                        </button>
+                    </div>
+                    <field name="currency_id" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name" string="Sales Register"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                        <div class="o_row">
+                            <field name="code" readonly="1"/>
+                            <field name="status" widget="badge" readonly="1"/>
+                            <field name="register_type" readonly="1"/>
+                        </div>
+                    </div>
+                    <div class="o_chebu_register_metrics">
+                        <div class="o_chebu_register_metric o_chebu_metric_today">
+                            <span class="o_chebu_metric_label">Today's Sales</span>
+                            <strong><field name="today_order_count" readonly="1"/></strong>
+                            <span class="o_chebu_metric_note">Paid transactions</span>
+                        </div>
+                        <div class="o_chebu_register_metric o_chebu_metric_collection">
+                            <span class="o_chebu_metric_label">Today's Collection</span>
+                            <strong><field name="today_collection" widget="monetary" readonly="1"/></strong>
+                            <span class="o_chebu_metric_note">Collected today</span>
+                        </div>
+                        <div class="o_chebu_register_metric o_chebu_metric_total">
+                            <span class="o_chebu_metric_label">Total Collection</span>
+                            <strong><field name="total_collection" widget="monetary" readonly="1"/></strong>
+                            <span class="o_chebu_metric_note">All paid transactions</span>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page string="Recent Transactions">
+                            <field name="recent_order_ids" nolabel="1" readonly="1">
+                                <list create="false" edit="false" delete="false">
+                                    <field name="date_order"/>
+                                    <field name="name" string="Receipt"/>
+                                    <field name="partner_id"/>
+                                    <field name="user_id" string="Cashier"/>
+                                    <field name="amount_total"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_chebu_pos_register_settings_form" model="ir.ui.view">
+        <field name="name">chebu.pos.register.settings.form</field>
+        <field name="model">chebu.pos.register</field>
+        <field name="groups_id" eval="[(4, ref('point_of_sale.group_pos_manager'))]"/>
+        <field name="arch" type="xml">
+            <form string="Register Settings" create="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Register Configuration"/>
+                        <h1><field name="name"/></h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
                             <field name="code"/>
                             <field name="register_type"/>
-                            <field name="status"/>
                             <field name="active"/>
+                            <field name="status"/>
                         </group>
                         <group>
+                            <field name="pos_config_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <field name="user_id"/>
                             <field name="session_id"/>
-                            <field name="pos_config_id"/>
-                            <field name="company_id"/>
-                            <field name="last_login"/>
-                            <field name="last_logout"/>
+                            <field name="last_login" readonly="1"/>
+                            <field name="last_logout" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -48,7 +169,8 @@
     <record id="action_chebu_pos_register" model="ir.actions.act_window">
         <field name="name">Chebu POS Registers</field>
         <field name="res_model">chebu.pos.register</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'default_register_type': 'sales'}</field>
     </record>
 
     <menuitem id="menu_chebu_pos_root" name="Chebu POS" parent="point_of_sale.menu_point_root" sequence="50"/>
